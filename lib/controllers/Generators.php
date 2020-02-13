@@ -48,6 +48,11 @@ class Generators {
 	 *         @type int $min The minimum value. Default 1.
 	 *         @type int $max The maximum value. Default 4.
 	 *     }
+	 *     @type array $date_range {
+	 *         Optional. Earliest/latest date to use for orders.
+	 *         @type string $earliest The earliest possible date for a transaction. Defaults to last month.
+	 *         @type string $latest   The latest possible date. Defaults to today.
+	 *     }
 	 * }
 	 * @return array|\WP_Error Array of generated IDs, keyed by the type, or a WP_Error object.
 	 */
@@ -136,6 +141,11 @@ class Generators {
 	 *         Optional. The min/max number of items to use in each transaction.
 	 *         @type int $min The minimum value. Default 1.
 	 *         @type int $max The maximum value. Default 4.
+	 *     }
+	 *     @type array $date_range {
+	 *         Optional. Earliest/latest date to use for orders.
+	 *         @type string $earliest The earliest possible date for a transaction. Defaults to last month.
+	 *         @type string $latest   The latest possible date. Defaults to today.
 	 *     }
 	 * }
 	 * @return array|\WP_Error Array of generated order IDs, or a WP_Error object.

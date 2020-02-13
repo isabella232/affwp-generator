@@ -41,9 +41,13 @@ affwp_generator()->generate()->transactions( 'edd', array(
   'affiliates'               => 1, // Generate 1 affiliate to refer in each order
   'products'                 => 10, // Generate 10 products to randomly select in each order.
   'products_per_transaction' => array(
-  'min' => 2, // Minimum of 2 products per order
-  'max' => 10, // Maximum of 10 products per order
-)
+    'min' => 2, // Minimum of 2 products per order
+    'max' => 10, // Maximum of 10 products per order
+  ),
+  'date_range'              => array(
+    'earliest' => 'last_year', // Generate orders and referrals as old as 1 full year.
+    'latest'   => 'today',     // Generate orders and referrals as late as today.
+  )
 ) );
 ```
 

@@ -42,13 +42,15 @@ class Order extends Integration_Generator {
 			if ( empty( $this->args['affiliates'] ) ) {
 				$order_id = $this->integration->place_order(
 					$order_args['users'],
-					$order_args['products']
+					$order_args['products'],
+					$order_args['date']
 				);
 			} else {
 				$order_id = $this->integration->place_referred_order(
 					$order_args['users'],
-					$order_args['affiliates'],
-					$order_args['products']
+					$order_args['affiliate'],
+					$order_args['products'],
+					$order_args['date']
 				);
 			}
 
@@ -84,6 +86,10 @@ class Order extends Integration_Generator {
 			'users'                    => array(),
 			'affiliates'               => array(),
 			'products'                 => array(),
+			'date_range'               => array(
+				'earliest' => 'last month',
+				'latest'   => 'today',
+			),
 			'products_per_transaction' => array(
 				'max' => 4,
 				'min' => 1,
@@ -106,6 +112,17 @@ class Order extends Integration_Generator {
 		if ( ! is_array( $args['products'] ) ) {
 			$args['products'] = array( $args['products'] );
 		}
+
+		// Set date range, if provided
+		if ( ! is_array( $args['date_range'] ) ) {
+			$args['date_range'] = array(
+				'earliest' => $args['date_range'],
+				'latest'   => $args['date_range'],
+			);
+		}
+
+		$args['date_range']               = wp_parse_args( $args['date_range'], $defaults['date_range'] );
+		$args['products_per_transaction'] = wp_parse_args( $args['products_per_transaction'], $defaults['products_per_transaction'] );
 
 		// Add an error if the number argument is less than 1
 		if ( $args['number'] < 1 ) {
@@ -155,6 +172,45 @@ class Order extends Integration_Generator {
 			);
 		}
 
+		// Validate date range values are valid
+		if ( ! isset( $args['date_range']['earliest'] ) || ! isset( $args['date_range']['latest'] ) ) {
+			$this->errors->add(
+				'malformed_date_range_arg',
+				'The date range arg must either be a single date value, or an array containing earliest and latest values.'
+			);
+		}
+
+		$earliest_date = $latest_date = 0;
+
+		// Test to ensure earliest date is valid
+		try{
+			$earliest_date = new \DateTime( $args['date_range']['earliest'] );
+		}catch( \Exception $e ){
+			$this->errors->add(
+				'malformed_earliest_date_range_arg',
+				'The earliest date range arg failed to create a valid DateTime object.',
+				array( 'error_info' => $e )
+			);
+		}
+
+		// Test to ensure latest date is valid
+		try{
+			$latest_date = new \DateTime( $args['date_range']['latest'] );
+		}catch( \Exception $e ){
+			$this->errors->add(
+				'malformed_latest_date_range_arg',
+				'The latest date range arg failed to create a valid DateTime object.',
+				array( 'error_info' => $e )
+			);
+		}
+
+		if ( $earliest_date > $latest_date ) {
+			$this->errors->add(
+				'earliest_date_newer_than_latest_date',
+				'The latest date arg must be newer than the earliest date.'
+			);
+		}
+
 		return $args;
 	}
 
@@ -170,10 +226,10 @@ class Order extends Integration_Generator {
 		$product_range = $this->args['products_per_transaction'];
 		$product_count = affwp_generator()->random()->number( $product_range['min'], $product_range['max'] );
 		$users         = affwp_generator()->random()->array_item( $this->args['users'] );
-		$affiliates    = affwp_generator()->random()->array_item( $this->args['affiliates'] );
+		$affiliate    = affwp_generator()->random()->array_item( $this->args['affiliates'] );
 		$products      = affwp_generator()->random()->array_subset( $this->args['products'], $product_count );
+		$date          = affwp_generator()->random()->date( $this->args['date_range']['earliest'], $this->args['date_range']['latest'] );
 
-
-		return compact( 'users', 'affiliates', 'products' );
+		return compact( 'users', 'affiliate', 'products', 'date' );
 	}
 }

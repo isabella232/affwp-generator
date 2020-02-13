@@ -111,7 +111,7 @@ class Randomizer {
 	 * @since 1.0.0
 	 *
 	 * @param array $items  Pool of items to select a random item from.
-	 * @param array $number Number of items to retrieve.
+	 * @param int   $number Number of items to retrieve.
 	 * @return array A collection of randomly selected items.
 	 */
 	public function array_subset( array $items, $number ) {

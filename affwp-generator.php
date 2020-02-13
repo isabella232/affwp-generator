@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: AffiliateWP Integration Utilities
+Plugin Name: AffiliateWP Generator Utility
 Description: Handles data generation and other handy methods with AffiliateWP integrations.
 Version: 1.0.0
 Author: Sandhills Development

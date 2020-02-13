@@ -31,12 +31,13 @@ class EDD extends Integration {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int   $user     The user ID to use as the customer.
-	 * @param array $products List of product IDs to use in the order.
+	 * @param int             $user     The user ID to use as the customer.
+	 * @param array           $products List of product IDs to use in the order.
+	 * @param \DateTime|false $date     The date to place this order.
 	 *
 	 * @return int The order ID.
 	 */
-	public function place_order( $user, $downloads ) {
+	public function place_order( $user, $downloads, $date = false ) {
 
 		$total           = 0;
 		$user            = get_userdata( $user );
@@ -101,7 +102,12 @@ class EDD extends Integration {
 			'cart_details' => $cart_details,
 			'status'       => 'pending',
 		);
-		$payment_id    = edd_insert_payment( $purchase_data );
+
+		if ( $date instanceof \DateTime ) {
+			$purchase_data['date'] = $date->format( 'Y-m-d G:i:s' );
+		}
+
+		$payment_id = edd_insert_payment( $purchase_data );
 		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 		edd_update_payment_status( $payment_id, 'complete' );
 
