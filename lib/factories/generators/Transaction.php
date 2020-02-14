@@ -82,7 +82,7 @@ class Transaction extends Integration_Generator {
 		} else {
 			// Log the successful generate event
 			affwp_generator()->logger()->log(
-				'affwp_generator_generator_event',
+				'affwp_generator_event',
 				'transactions_generated',
 				sprintf( "The transactions generator created %s transactions.", count( $orders ) ),
 				'',

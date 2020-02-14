@@ -76,7 +76,7 @@ class Affiliate extends Generator {
 
 		// Log the generate event
 		affwp_generator()->logger()->log(
-			'affwp_generator_generator_event',
+			'affwp_generator_event',
 			'affiliates_generated',
 			'The affiliate generator created ' . count( $results ) . ' affiliates.',
 			'',

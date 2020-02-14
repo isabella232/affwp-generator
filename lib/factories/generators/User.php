@@ -54,7 +54,7 @@ class User extends Generator {
 
 		// Log the generate event
 		affwp_generator()->logger()->log(
-			'affwp_generator_generator_event',
+			'affwp_generator_event',
 			'users_generated',
 			'The user generator created ' . count( $results ) . ' users.',
 			'',

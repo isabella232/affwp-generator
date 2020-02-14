@@ -32,7 +32,7 @@ abstract class Integration {
 	 *
 	 * @var \Affiliate_WP_Base|\WP_Error
 	 */
-	private $integration;
+	protected $integration;
 
 	/**
 	 * Places an order. Does not simulate a referral visit.

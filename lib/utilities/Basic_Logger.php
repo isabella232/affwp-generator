@@ -40,7 +40,7 @@ class Basic_Logger extends Logger {
 	 * @since 1.0.0
 	 * @var array event file keyed keyed by the event type.
 	 */
-	private $files = array( 'affwp_generator_error' => 'affwp_generator-error-log', 'affwp_generator_generator_event' => 'affwp_generator-generator-event-log' );
+	private $files = array( 'affwp_generator_error' => 'affwp_generator-error-log', 'affwp_generator_event' => 'affwp_generator-generator-event-log' );
 
 	/**
 	 * Logging directory.

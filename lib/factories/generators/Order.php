@@ -61,7 +61,7 @@ class Order extends Integration_Generator {
 
 		// Log the generate event
 		affwp_generator()->logger()->log(
-			'affwp_generator_generator_event',
+			'affwp_generator_event',
 			'order_generated',
 			'The order generator created ' . count( $results ) . ' order.',
 			'',
