@@ -121,9 +121,16 @@ class EDD extends Integration {
 	 *
 	 * @param string $name  The product name.
 	 * @param number $price The product price.
-	 * @return int The generated product ID.
+	 * @return int|\WP_Error The generated product ID or a WP_Error object if the integration failed to setup.
 	 */
 	public function add_product( $name, $price ) {
+		if ( ! $this->integration->plugin_is_active() ) {
+			return new \WP_Error(
+				'plugin_is_not_active',
+				'The ' . $this->integration->get_name() . ' plugin is not active.'
+			);
+		}
+
 		$download = new EDD_Download();
 
 		$download->create( array(
