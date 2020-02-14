@@ -139,9 +139,11 @@ namespace Affiliate_WP_Generator {
 				}
 
 				global $wp_version;
+				$affwp_version = explode( '-', AFFILIATEWP_VERSION );
+
 				$supports_wp_version    = version_compare( $wp_version, '5.0', '>=' );
 				$supports_php_version   = version_compare( phpversion(), '5.6', '>=' );
-				$supports_affwp_version = version_compare( AFFILIATEWP_VERSION, '2.5', '>=' );
+				$supports_affwp_version = version_compare( $affwp_version[0], '2.5', '>=' );
 
 				if ( $supports_wp_version && $supports_php_version && $supports_affwp_version ) {
 
