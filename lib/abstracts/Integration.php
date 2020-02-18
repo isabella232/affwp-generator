@@ -125,10 +125,13 @@ abstract class Integration {
 	 * @return bool
 	 */
 	public function set_referral_date( $order_id, $date ) {
-		$referral_id = affiliate_wp()->referrals->get_by( 'reference', $order_id );
+		$referral = affiliate_wp()->referrals->get_by( 'reference', $order_id );
 
-		return affiliate_wp()->referrals->update_referral( $referral_id, array(
-			'date' => $date->format('Y-m-d H:i:s'),
-		) );
+		$referral_id    = $referral->referral_id;
+		$referral->date = $date->format( 'Y-m-d H:i:s' );
+		$args           = (array) $referral;
+		unset( $args['referral_id'] );
+
+		return affiliate_wp()->referrals->update_referral( $referral_id, $args );
 	}
 }
