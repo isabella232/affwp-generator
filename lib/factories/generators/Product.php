@@ -45,6 +45,8 @@ class Product extends Integration_Generator {
 			if ( ! is_wp_error( $product_id ) ) {
 				$results[] = $product_id;
 			}
+
+			do_action( 'affwp_generator_after_generated_product', $product_id, $results );
 		}
 
 		// Log the generate event

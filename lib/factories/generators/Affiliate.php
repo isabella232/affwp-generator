@@ -72,6 +72,8 @@ class Affiliate extends Generator {
 			if ( false !== $affiliate_id ) {
 				$results[] = $affiliate_id;
 			}
+
+			do_action( 'affwp_generator_after_generated_affiliate', $affiliate_id, $results );
 		}
 
 		// Log the generate event

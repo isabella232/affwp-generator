@@ -57,6 +57,8 @@ class Order extends Integration_Generator {
 			if ( ! is_wp_error( $order_id ) ) {
 				$results[] = $order_id;
 			}
+
+			do_action( 'affwp_generator_after_generated_order', $order_id, $results );
 		}
 
 		// Log the generate event
@@ -172,6 +174,13 @@ class Order extends Integration_Generator {
 			);
 		}
 
+		if ( count( $args['products'] ) < $args['products_per_transaction']['max'] ) {
+			$this->errors->add(
+				'products_per_transaction_max_is_larger_than_product_count',
+				'The max number of products per transaction cannot be greater than the number of products.',
+				);
+		}
+
 		// Validate date range values are valid
 		if ( ! isset( $args['date_range']['earliest'] ) || ! isset( $args['date_range']['latest'] ) ) {
 			$this->errors->add(
@@ -226,7 +235,7 @@ class Order extends Integration_Generator {
 		$product_range = $this->args['products_per_transaction'];
 		$product_count = affwp_generator()->random()->number( $product_range['min'], $product_range['max'] );
 		$users         = affwp_generator()->random()->array_item( $this->args['users'] );
-		$affiliate    = affwp_generator()->random()->array_item( $this->args['affiliates'] );
+		$affiliate     = affwp_generator()->random()->array_item( $this->args['affiliates'] );
 		$products      = affwp_generator()->random()->array_subset( $this->args['products'], $product_count );
 		$date          = affwp_generator()->random()->date( $this->args['date_range']['earliest'], $this->args['date_range']['latest'] );
 

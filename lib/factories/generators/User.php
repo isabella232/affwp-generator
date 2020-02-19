@@ -50,6 +50,8 @@ class User extends Generator {
 			if ( ! is_wp_error( $user_id ) ) {
 				$results[] = $user_id;
 			}
+
+			do_action( 'affwp_generator_after_generated_user', $user_id, $results );
 		}
 
 		// Log the generate event
