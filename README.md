@@ -134,3 +134,53 @@ affwp_generator()->random()->faker()->tld;
 ```
 
 For a complete list of the _insane_ number of things the Faker library can generate, check the [Faker](https://github.com/fzaninotto/Faker) docs
+
+## CLI
+
+All of the different generators work with the cli, as well. All of the commands can be seen in  the `lib/commands` directory. use the `--help` flag for a lot more info on each of these.
+
+### Commands
+`wp affwp generate transactions` - Generates users, affiliates, products, and orders based on specified quantities
+
+```bash
+# Generate 50 random orders for Easy Digital Downloads.
+# Will also generate new affiliates, users, products.
+wp affwp generate orders edd --number=50
+``` 
+
+```bash
+# Generate 50 random orders for Easy Digital Downloads.
+# Will generate 10 affiliates, and the default users, and products.
+wp affwp generate orders edd --number=50 --affiliates=10
+``` 
+
+`wp affwp generate products` - Generate products.
+
+```bash
+# Generate 50 random products for Easy Digital Downloads.
+wp affwp generate products edd --number=50
+```
+
+`wp affwp generate affiliates` - Generate affiliates.
+
+```bash
+# Generate 50 random affiliates
+wp affwp generate affiliates --number=50
+```
+
+`wp affwp generate users` - Generate users.
+
+```bash
+# Generate 50 random users
+wp affwp generate users --number=50
+```
+
+`wp affwp generate orders` - Generates orders using an integration, affiliate IDs, order IDs, and user IDs.
+
+If you need to be more-specific than a simple transaction, you can pass commands directly into the `orders` command.
+The example below would generate 100 orders, using 10 random active affiliates, a hard-coded list of products, and
+a list of 10 users from the database.
+```bash
+# generate 100 orders, using 10 random active affiliates, a hard-coded list of products, and a list of 10 users from the database.
+wp affwp generate orders edd --affiliates="$(wp affwp affiliate list --status=active --format=ids)" --products="507 508 509 510" --users="$(wp user list --format=ids --number=10)" --number=100
+```

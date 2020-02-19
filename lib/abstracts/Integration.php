@@ -10,6 +10,8 @@
 namespace Affiliate_WP_Generator\Abstracts;
 
 
+use Affiliate_WP_Generator\Factories\Order;
+use Affiliate_WP_Generator\Factories\Product;
 use DateTime;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -57,6 +59,26 @@ abstract class Integration {
 	 * @return int The generated product ID.
 	 */
 	abstract public function add_product( $name, $price );
+
+	/**
+	 * Retrieves the product record.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $product_id The product ID
+	 * @return Product Individual product information.
+	 */
+	abstract public function get_product( $product_id );
+
+	/**
+	 * Retrieves the order record.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $order_id The order ID
+	 * @return Order Individual order information.
+	 */
+	abstract public function get_order( $order_id );
 
 	/**
 	 * Integration constructor.

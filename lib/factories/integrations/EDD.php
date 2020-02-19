@@ -11,6 +11,8 @@ namespace Affiliate_WP_Generator\Factories\Integrations;
 
 
 use Affiliate_WP_Generator\Abstracts\Integration;
+use Affiliate_WP_Generator\Factories\Order;
+use Affiliate_WP_Generator\Factories\Product;
 use EDD_Download;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -144,4 +146,35 @@ class EDD extends Integration {
 		return $download->ID;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function get_product( $product_id ) {
+		$download = edd_get_download( $product_id );
+
+		return new Product(
+			array(
+				'id'      => $product_id,
+				'name'    => $download->post_title,
+				'price'   => edd_get_download_price( $product_id ),
+				'status'  => $download->post_status,
+				'created' => $download->post_date,
+			)
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_order( $order_id ) {
+		return new Order(
+			array(
+				'id'       => $order_id,
+				'customer' => edd_get_payment_customer_id( $order_id ),
+				'total'    => edd_get_payment_amount( $order_id ),
+				'status'   => edd_get_payment_status( $order_id ),
+				'date'     => edd_get_payment_completed_date( $order_id ),
+			)
+		);
+	}
 }

@@ -251,6 +251,12 @@ namespace Affiliate_WP_Generator {
 			//				register_widget( 'Affiliate_WP_Generator\Widgets\...' );
 			//			} );
 
+			// Commands
+			new Commands\Generate_Users;
+			new Commands\Generate_Affiliates;
+			new Commands\Generate_Products;
+			new Commands\Generate_Orders;
+			new Commands\Generate_Transactions;
 		}
 
 		/**
@@ -287,6 +293,9 @@ namespace Affiliate_WP_Generator {
 
 				// The version of this plugin. Use when registering scripts and styles to bust cache.
 				define( 'AFFWP_GENERATOR_VERSION', '1.0.0' );
+
+				// The version of this plugin. Use when registering scripts and styles to bust cache.
+				define( 'AFFWP_GENERATOR_CLI_BASE', 'affwp generate' );
 
 				// The composer path.
 				define( 'AFFWP_GENERATOR_COMPOSER_PATH', $dir . 'vendor/' );
