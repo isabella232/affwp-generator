@@ -145,13 +145,13 @@ All of the different generators work with the cli, as well. All of the commands 
 ```bash
 # Generate 50 random orders for Easy Digital Downloads.
 # Will also generate new affiliates, users, products.
-wp affwp generate orders edd --number=50
+wp affwp generate transactions edd --number=50
 ``` 
 
 ```bash
 # Generate 50 random orders for Easy Digital Downloads.
 # Will generate 10 affiliates, and the default users, and products.
-wp affwp generate orders edd --number=50 --affiliates=10
+wp affwp generate transactions edd --number=50 --affiliates=10
 ``` 
 
 `wp affwp generate products` - Generate products.
