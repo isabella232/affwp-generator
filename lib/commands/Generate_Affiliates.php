@@ -98,12 +98,13 @@ class Generate_Affiliates extends Command {
 				$user      = get_user_by( 'id', $affiliate->user_id );
 
 				return array(
-					'name'      => $user->data->display_name,
-					'login'     => $user->data->user_login,
-					'user_id'   => $user->data->ID,
-					'rate'      => $affiliate->rate,
-					'rate_type' => $affiliate->rate_type,
-					'status'    => $affiliate->status,
+					'affiliate_id' => $affiliate_id,
+					'name'         => $user->data->display_name,
+					'login'        => $user->data->user_login,
+					'user_id'      => $user->data->ID,
+					'rate'         => $affiliate->rate,
+					'rate_type'    => $affiliate->rate_type,
+					'status'       => $affiliate->status,
 				);
 			}, $affiliates );
 
@@ -115,7 +116,7 @@ class Generate_Affiliates extends Command {
 
 		$message = \WP_CLI\Utils\format_items( $assoc_args['format'], $result, $format_fields );
 
-		\WP_CLI::success( $message );
+		\WP_CLI::line( $message );
 	}
 
 	/**

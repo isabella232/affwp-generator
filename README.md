@@ -184,3 +184,8 @@ a list of 10 users from the database.
 # generate 100 orders, using 10 random active affiliates, a hard-coded list of products, and a list of 10 users from the database.
 wp affwp generate orders edd --affiliates="$(wp affwp affiliate list --status=active --format=ids)" --products="507 508 509 510" --users="$(wp user list --format=ids --number=10)" --number=100
 ```
+
+You can also generate random items with more specificity than transactions. The example below generates a single order using 1 active affiliate.
+```bash
+wp affwp generate orders edd --number=1 --users="$(wp affwp generate users --format=ids)" --affiliates="$(wp affwp generate affiliates --number=1 --status=active --format=ids)" --products="$(wp affwp generate products edd --format=ids)"
+```

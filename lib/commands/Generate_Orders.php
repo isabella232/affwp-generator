@@ -131,7 +131,7 @@ class Generate_Orders extends Command {
 
 		$message = \WP_CLI\Utils\format_items( $assoc_args['format'], $result, $format_fields );
 
-		\WP_CLI::success( $message );
+		\WP_CLI::line( $message );
 	}
 
 	/**
