@@ -106,7 +106,7 @@ class EDD extends Integration {
 		);
 
 		if ( $date instanceof \DateTime ) {
-			$purchase_data['date'] = $date->format( 'Y-m-d G:i:s' );
+			$purchase_data['post_date'] = $date->format( 'Y-m-d G:i:s' );
 		}
 
 		$payment_id = edd_insert_payment( $purchase_data );
@@ -173,7 +173,7 @@ class EDD extends Integration {
 				'customer' => edd_get_payment_customer_id( $order_id ),
 				'total'    => edd_get_payment_amount( $order_id ),
 				'status'   => edd_get_payment_status( $order_id ),
-				'date'     => edd_get_payment_completed_date( $order_id ),
+				'date'     => get_the_date( 'Y-m-d H:i:s', $order_id ),
 			)
 		);
 	}

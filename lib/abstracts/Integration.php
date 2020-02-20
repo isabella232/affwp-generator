@@ -128,10 +128,10 @@ abstract class Integration {
 	public function place_referred_order( $user, $affiliate, $products, $date = false ) {
 		$this->simulate_visit( $affiliate );
 
-		$payment_id = $this->place_order( $user, $products );
+		$payment_id = $this->place_order( $user, $products, $date );
 
 		if ( false !== $date ) {
-			$this->set_referral_date( $payment_id, $date );
+			$this->set_referral_date( $payment_id );
 		}
 
 		return $payment_id;
@@ -143,14 +143,14 @@ abstract class Integration {
 	 * @since 1.0.0
 	 *
 	 * @param int $order_id The order ID
-	 * @param DateTime $date The date to set the referral
 	 * @return bool
 	 */
-	public function set_referral_date( $order_id, $date ) {
+	public function set_referral_date( $order_id ) {
 		$referral = affiliate_wp()->referrals->get_by( 'reference', $order_id );
+		$order = $this->get_order( $order_id );
 
 		$referral_id    = $referral->referral_id;
-		$referral->date = $date->format( 'Y-m-d H:i:s' );
+		$referral->date = date( 'Y-m-d H:i:s', strtotime( $order->args['date'] ) );
 		$args           = (array) $referral;
 		unset( $args['referral_id'] );
 
