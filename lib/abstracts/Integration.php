@@ -147,6 +147,11 @@ abstract class Integration {
 	 */
 	public function set_referral_date( $order_id ) {
 		$referral = affiliate_wp()->referrals->get_by( 'reference', $order_id );
+
+		if ( ! $referral ) {
+			return false;
+		}
+
 		$order = $this->get_order( $order_id );
 
 		$referral_id    = $referral->referral_id;

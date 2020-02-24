@@ -217,4 +217,21 @@ class Randomizer {
 	public function date( $earliest_date, $latest_date = 'now' ) {
 		return $this->faker()->dateTimeBetween( $earliest_date, $latest_date );
 	}
+
+	/**
+	 * Generates a complete e-commerce ready address
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Array containing address data.
+	 */
+	public function address() {
+		return array(
+			'street'             => $this->faker()->streetAddress,
+			'city'               => $this->faker()->city,
+			'state'              => $this->faker()->state,
+			'state_abbreviation' => $this->faker()->stateAbbr,
+			'postcode'           => $this->faker()->postcode,
+		);
+	}
 }
