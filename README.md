@@ -7,14 +7,14 @@ Currently, this utility works with three integrations:
 * Restrict Content Pro
 * WooCommerce
 
+
+
+
 ## Setup
 
-This plugin uses a composer library, [Faker](https://github.com/fzaninotto/Faker), to help generate random data.
-You may need to have [Composer](https://getcomposer.org/) installed on your computer to use this plugin.
-
-After downloading this plugin, navigate to this directory and run `composer install` to get started.
-
-After that, it's as simple as activating the plugin.
+1. Download the plugin into your `wp-content/plugins` directory.
+1. Activate the plugin.
+1. Start generating things.
 
 ## Generator Examples
 

@@ -157,6 +157,8 @@ namespace Affiliate_WP_Generator {
 					self::$instance = new self;
 					self::$instance->_define_constants();
 					require_once( AFFWP_GENERATOR_COMPOSER_PATH . 'autoload.php' );
+					// Manually load Faker autoloader
+					require_once( AFFWP_GENERATOR_ROOT_DIR . 'lib/external-libraries/faker/autoload.php' );
 					self::$instance->_setup_autoloader();
 					self::$instance->_register_scripts();
 					self::$instance->_setup_classes();
@@ -297,8 +299,6 @@ namespace Affiliate_WP_Generator {
 				// The version of this plugin. Use when registering scripts and styles to bust cache.
 				define( 'AFFWP_GENERATOR_CLI_BASE', 'affwp generate' );
 
-				// The composer path.
-				define( 'AFFWP_GENERATOR_COMPOSER_PATH', $dir . 'vendor/' );
 			}
 		}
 
