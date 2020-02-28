@@ -44,7 +44,6 @@ class WooCommerce extends Integration {
 		$order = wc_create_order(
 			array(
 				'customer_id' => $user,
-				'status'      => 'completed',
 			),
 		);
 
@@ -69,17 +68,20 @@ class WooCommerce extends Integration {
 			'postcode'   => $address['postcode'],
 		), 'billing' );
 
-		$order->calculate_totals();
-
+		$order_id = $order->save();
 
 		// Set created date.
 		if ( $date instanceof \DateTime ) {
 			$order->set_date_created( $date->format( 'Y-m-d H:i:s' ) );
 		}
+		$order->set_status( 'completed' );
 
-		$order_id = $order->save();
+		$order->calculate_totals();
 
-		do_action( 'woocommerce_checkout_update_order_meta', $order_id );
+
+		// Get a new instance of the integration. This must happen to prevent the previous order ID from being re-used.
+		$this->integration = affiliate_wp()->integrations->get('woocommerce');
+		$this->integration->add_pending_referral( $order_id );
 
 		return $order_id;
 	}
