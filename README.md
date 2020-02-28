@@ -1,14 +1,20 @@
-# AffiliateWP Integration Utilities
+# AffiliateWP Generator
 
 This plugin is intended to help make it easier to test and develop using AffiliateWP integrations.
-Currently, this utility works with three integrations:
+Currently, this utility works with two integrations:
 
 * Easy Digital Downloads
-* Restrict Content Pro
 * WooCommerce
 
+I'd like to get this to support RCP _someday_.
 
+## Minimum Requirements
 
+This plugin, at minimum, requires:
+
+1. AffiliateWP 2.5
+1. WordPress 5.0
+1. PHP 5.6
 
 ## Setup
 
@@ -22,8 +28,12 @@ All generators can be found in the `Generators` controller, and can be accessed 
 
 ### Generate Entire Transactions From Scratch
 
-If you just want to generate some referrals using _real_ orders, simply do this:
+If you just want to generate some referrals with an integration, you can use the `transactions` method.
 
+Doing it in this simple manner makes _a lot_ of assumptions on your behalf, and there's a _lot_ of random things
+happening here. This includes pretty much all of the affiliate details, such as rate type, rate, and status.
+
+Example:
 ```php
 <?php
 // Generates 100 transactions with referrals using Easy Digital Downloads.
@@ -48,6 +58,26 @@ affwp_generator()->generate()->transactions( 'edd', array(
     'earliest' => 'last_year', // Generate orders and referrals as old as 1 full year.
     'latest'   => 'today',     // Generate orders and referrals as late as today.
   )
+) );
+```
+
+You can also pass any of the arguments to each generator type as an array to get even more specific. This method is 
+especially useful because it uses sane numbers for the generated affiliate.
+
+```php
+<?php
+// Generates 10 transactions, 5 customers, 1 active affiliate, and 3 products with referrals using Easy Digital Downloads.
+
+affwp_generator()->generate()->transactions( 'edd', array(
+  'number'                   => 10, // Generate 10 orders
+  'users'                    => 5, // Generate 5 users to randomly select for orders
+  'affiliates'               => array(
+    'number'    => 1,
+    'status'    => 'active',
+    'rate_type' => 'percentage',
+    'rate'      => 10
+  ), // Generate 1 active affiliate to refer in each order that gets a 10% commission on orders.
+  'products'                 => 10, // Generate 10 products to randomly select in each order.
 ) );
 ```
 
@@ -81,7 +111,14 @@ $order_ids = affwp_generator()->generate()->orders( 'edd', array(
 ### Generate Orders Using A Mix of Existing and Nonexisting Data
 
 If you want to generate orders using both _existing_ and _nonexisting_ data,
-you can use the `orders` method with other generators:
+you can use the `orders` method with other generators.
+
+Unlike `transactions`, `orders` generates data using an array of existing users, affiliates, and products. 
+These items can be retrieved using a database query, or with any other generator method that returns 
+an array of generated IDs.
+
+The example below generates users and products, but retrieves 10 active affiliates from the database instead of generating 
+10 random affiliates.
 
 ```php
 <?php
@@ -89,8 +126,8 @@ you can use the `orders` method with other generators:
 // Generate 10 new users
 $users = affwp_generator()->generate()->users( array( 'number' => 10 ) );
 
-// Generate 10 active affiliates
-$affiliates = affwp_generator()->generate()->affiliates( array( 'number' => 10, 'status' => 'active' ) );
+// Get 10 active affiliates
+$affiliates = affiliate_wp()->affiliates->get_affiliates( array( 'number' => 10, 'status' => 'active' ) );
 
 // Generate EDD Products 
 $products = affwp_generator()->generate()->products( 'edd', array( 'number' => 10 ) );
