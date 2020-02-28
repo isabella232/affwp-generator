@@ -41,12 +41,14 @@ abstract class Integration_Generator extends Generator {
 		$this->integration = affwp_generator()->integration()->get( $integration );
 
 		// Bubble error if integration is invalid.
-		if ( is_wp_error( $integration ) ) {
-			$this->errors->add(
-				$this->integration->get_error_code(),
-				$this->integration->get_error_message(),
-				$this->integration->get_error_data()
-			);
+		if ( is_wp_error( $this->integration ) ) {
+			foreach ( $this->integration->get_error_codes() as $error_code ) {
+				$this->errors->add(
+					$error_code,
+					$this->integration->get_error_message( $error_code ),
+					$this->integration->get_error_data( $error_code )
+				);
+			}
 		}
 	}
 

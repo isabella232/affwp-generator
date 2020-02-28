@@ -23,7 +23,7 @@ namespace Affiliate_WP_Generator {
 	}
 
 	/**
-	 * AffiliateWP Integration Utilities Base Class
+	 * AffiliateWP Generator Base Class
 	 *
 	 * @since 1.0.0
 	 */
@@ -122,7 +122,7 @@ namespace Affiliate_WP_Generator {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @return self
+		 * @return self|\WP_Error
 		 */
 		public static function init() {
 			if ( ! isset( self::$instance ) ) {
@@ -139,42 +139,23 @@ namespace Affiliate_WP_Generator {
 				}
 
 				global $wp_version;
-				$affwp_version = explode( '-', AFFILIATEWP_VERSION );
-
+				$affwp_version          = explode( '-', AFFILIATEWP_VERSION );
 				$supports_wp_version    = version_compare( $wp_version, '5.0', '>=' );
 				$supports_php_version   = version_compare( phpversion(), '5.6', '>=' );
 				$supports_affwp_version = version_compare( $affwp_version[0], '2.5', '>=' );
-
-				if ( $supports_wp_version && $supports_php_version && $supports_affwp_version ) {
-
-					/**
-					 * Fires just before the AffiliateWP Integration Utilities plugin starts up.
-					 *
-					 * @since 1.0.0
-					 */
-					do_action( 'affwp_generator/before_setup' );
-
+				$is_supported           = $supports_wp_version && $supports_php_version && $supports_affwp_version;
+				if ( $is_supported ) {
 					self::$instance = new self;
 					self::$instance->_define_constants();
-					require_once( AFFWP_GENERATOR_COMPOSER_PATH . 'autoload.php' );
 					// Manually load Faker autoloader
 					require_once( AFFWP_GENERATOR_ROOT_DIR . 'lib/external-libraries/faker/autoload.php' );
 					self::$instance->_setup_autoloader();
-					self::$instance->_register_scripts();
 					self::$instance->_setup_classes();
-
-					/**
-					 * Fires just after the AffiliateWP Integration Utilities is completely set-up.
-					 *
-					 * @since 1.0.0
-					 */
-					do_action( 'affwp_generator/after_setup' );
-
 				} else {
 					$self           = new self;
 					self::$instance = new \WP_Error(
 						'minimum_version_not_met',
-						__( "The AffiliateWP Integration Utilities plugin requires at least WordPress 5.0, PHP 5.6, and AffiliateWP 2.5.", 'affwp_generator' ),
+						__( "The AffiliateWP Generator plugin requires at least WordPress 5.0, PHP 5.6, and AffiliateWP 2.5.", 'affwp_generator' ),
 						array(
 							'current_affwp_version' => AFFILIATEWP_VERSION,
 							'current_wp_version'    => $wp_version,
@@ -182,6 +163,10 @@ namespace Affiliate_WP_Generator {
 						)
 					);
 
+					// Include commands, so we can respond with an error message on why the commands are not working.
+					$self->_define_constants();
+					$self->_setup_autoloader();
+					$self->_setup_commands();
 					add_action( 'admin_notices', array( $self, 'below_version_notice' ) );
 				}
 			}
@@ -219,15 +204,24 @@ namespace Affiliate_WP_Generator {
 
 			if ( version_compare( $wp_version, '4.7', '<' ) ) {
 				echo '<div class="error">
-							<p>' . __( "AffiliateWP Integration Utilities plugin is not activated. The plugin requires at least WordPress 5.0 to function.", 'affwp_generator' ) . '</p>
+							<p>' . __( "AffiliateWP Generator plugin is not activated. The plugin requires at least WordPress 5.0 to function.", 'affwp_generator' ) . '</p>
 						</div>';
 			}
 
 			if ( version_compare( phpversion(), '5.6', '<' ) ) {
 				echo '<div class="error">
-							<p>' . __( "AffiliateWP Integration Utilities plugin is not activated. The plugin requires at least PHP 5.6 to function.", 'affwp_generator' ) . '</p>
+							<p>' . __( "AffiliateWP Generator plugin is not activated. The plugin requires at least PHP 5.6 to function.", 'affwp_generator' ) . '</p>
 						</div>';
 			}
+
+			$affwp_version = explode( '-', AFFILIATEWP_VERSION );
+
+			if ( version_compare( $affwp_version[0], '2.5', '<' ) ) {
+				echo '<div class="error">
+							<p>' . __( "AffiliateWP Generator plugin is not activated. The plugin requires at least AffiliateWP 2.5 to function.", 'affwp_generator' ) . '</p>
+						</div>';
+			}
+
 		}
 
 		/**
@@ -254,20 +248,20 @@ namespace Affiliate_WP_Generator {
 			//			} );
 
 			// Commands
+			$this->_setup_commands();
+		}
+
+		/**
+		 * Sets up commands
+		 *
+		 * @since 1.0.0
+		 */
+		private function _setup_commands() {
 			new Commands\Generate_Users;
 			new Commands\Generate_Affiliates;
 			new Commands\Generate_Products;
 			new Commands\Generate_Orders;
 			new Commands\Generate_Transactions;
-		}
-
-		/**
-		 * Registers styles and scripts.
-		 *
-		 * @since 1.0.0
-		 */
-		public function _register_scripts() {
-			// wp_register_script...
 		}
 
 		/**
@@ -351,7 +345,7 @@ namespace {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return Affiliate_WP_Generator
+	 * @return Affiliate_WP_Generator|\WP_Error
 	 */
 	function affwp_generator() {
 		return Affiliate_WP_Generator::init();

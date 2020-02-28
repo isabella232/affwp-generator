@@ -52,8 +52,10 @@ class Integrations {
 			return $integration;
 		}
 
+		$errors = new \WP_Error();
+
 		if ( false === $this->is_supported( $integration ) ) {
-			return new \WP_Error(
+			$errors->add(
 				'invalid_integration',
 				'The specified integration was not set because the integration is not supported.',
 				array( 'integration' => $integration, 'supported_integrations' => array_keys( $this->integrations ) )
@@ -66,6 +68,27 @@ class Integrations {
 		// Bubble up error if integration is not active or invalid
 		if ( is_wp_error( $core_integration_class ) ) {
 			return $core_integration_class;
+		}
+
+		if ( ! $core_integration_class->plugin_is_active() ) {
+			$errors->add(
+				'inactive_integration_plugin',
+				'The specified integration cannot be used because the integration\'s plugin is inactive.',
+				array( 'integration' => $integration )
+			);
+		}
+
+		if ( ! $core_integration_class->is_active() ) {
+			$errors->add(
+				'disabled_integration',
+				'The specified integration cannot be used because the integration is not enabled in AffiliateWP.',
+				array( 'integration' => $integration )
+			);
+		}
+
+		// Return all errors, if we have any.
+		if ( $errors->has_errors() ) {
+			return $errors;
 		}
 
 		return new $integration_class( $core_integration_class );

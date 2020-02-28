@@ -57,8 +57,13 @@ abstract class Command {
 	abstract public function run( $args, $assoc_args );
 
 
-	public function process_error_message( \WP_Error $error ) {
-		$message = "Errors were found: \n";
+	public function process_error_message( \WP_Error $error, $include_heading = true ) {
+
+		$message = '';
+
+		if ( true === $include_heading ) {
+			$message = "Errors were found: \n";
+		}
 
 		foreach ( $error->get_error_messages() as $error_message ) {
 			$message .= $error_message . "\n";
@@ -66,13 +71,29 @@ abstract class Command {
 
 		$error_data = $error->get_error_data();
 
-		foreach ( $error_data['errors'] as $error_messages ) {
-			foreach ( $error_messages as $error_message ) {
-				$message .= " - " . $error_message[0] . "\n";
+		if ( is_wp_error( $error_data['errors'] ) ) {
+			$message .= $this->process_error_message( $error_data['errors'], false );
+		} else {
+
+			foreach ( $error_data['errors'] as $error_messages ) {
+				foreach ( $error_messages as $error_message ) {
+					$message .= " - " . $error_message[0] . "\n";
+				}
 			}
 		}
 
 		return $message;
+	}
+
+	/**
+	 * Generates an inactive plugin message, if the generator has one.
+	 *
+	 * @since 1.0.0
+	 */
+	public function generator_inactive_message() {
+		if ( is_wp_error( affwp_generator() ) ) {
+			\WP_CLI::error( $this->process_error_message( affwp_generator() ) );
+		}
 	}
 
 	/**
@@ -92,7 +113,14 @@ abstract class Command {
 		if ( ! in_array( $name, self::$commands ) ) {
 			$name = AFFWP_GENERATOR_CLI_BASE . ' ' . $name;
 
-			\WP_CLI::add_command( $name, array( $this, 'run' ), $this->get_command_args() );
+			// If something went wrong when setting up the generator, retrieve the error instead.
+			if ( is_wp_error( affwp_generator() ) ) {
+				\WP_CLI::add_command( $name, array( $this, 'generator_inactive_message' ) );
+
+				// Otherwise, set up the default command.
+			} else {
+				\WP_CLI::add_command( $name, array( $this, 'run' ), $this->get_command_args() );
+			}
 			self::$commands[] = $name;
 		}
 	}
