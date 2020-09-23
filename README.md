@@ -226,3 +226,11 @@ You can also generate random items with more specificity than transactions. The 
 ```bash
 wp affwp generate orders edd --number=1 --users="$(wp affwp generate users --format=ids)" --affiliates="$(wp affwp generate affiliates --number=1 --status=active --format=ids)" --products="$(wp affwp generate products edd --format=ids)"
 ```
+
+## Useful Helpers
+
+Generate 100 referred EDD transactions for a single affiliate. Generates the newly generated affiliate's user data:
+
+```bash
+AFFILIATE_ID=$(wp affwp generate affiliates --number=1 --status=active --format=ids) && wp affwp generate orders edd --number=100 --affiliates="$AFFILIATE_ID" --users="$(wp affwp generate users --number=10 --format=ids)" --products="$(wp affwp generate products edd --number=10 --format=ids)"  && wp user get $(wp affwp affiliate get $AFFILIATE_ID --field=user_id)
+```
