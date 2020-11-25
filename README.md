@@ -234,3 +234,8 @@ Generate 100 referred EDD transactions for a single affiliate. Generates the new
 ```bash
 AFFILIATE_ID=$(wp affwp generate affiliates --number=1 --status=active --format=ids) && wp affwp generate orders edd --number=100 --affiliates="$AFFILIATE_ID" --users="$(wp affwp generate users --number=10 --format=ids)" --products="$(wp affwp generate products edd --number=10 --format=ids)"  && wp user get $(wp affwp affiliate get $AFFILIATE_ID --field=user_id)
 ```
+
+Generate 3000 referrals for an affiliate between this year and last year. (This takes a while)
+```bash
+AFFILIATE_ID=$(wp affwp generate affiliates --number=1 --status=active --format=ids) && wp affwp generate orders edd --number=3000 --affiliates="$AFFILIATE_ID" --users="$(wp affwp generate users --number=20 --format=ids)" --products="$(wp affwp generate products edd --number=15 --format=ids)" --earliest-date="last year" --latest-date="tomorrow midnight"  && wp user get $(wp affwp affiliate get $AFFILIATE_ID --field=user_id) 
+```
