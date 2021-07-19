@@ -2,7 +2,7 @@
 /*
 Plugin Name: AffiliateWP Generator Utility
 Description: Handles data generation and other handy methods with AffiliateWP integrations.
-Version: 1.0.0
+Version: 1.0.1
 Author: Sandhills Development
 Text Domain: affwp_generator
 Domain Path: /languages
@@ -351,5 +351,5 @@ namespace {
 		return Affiliate_WP_Generator::init();
 	}
 
-	affwp_generator();
+	add_action( 'plugins_loaded', 'affwp_generator' );
 }
