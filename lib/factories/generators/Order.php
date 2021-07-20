@@ -50,7 +50,8 @@ class Order extends Integration_Generator {
 					$order_args['users'],
 					$order_args['affiliate'],
 					$order_args['products'],
-					$order_args['date']
+					affwp_generator()->random()->array_item( $this->args['campaigns'] ),
+					$order_args['date'],
 				);
 			}
 
@@ -88,6 +89,7 @@ class Order extends Integration_Generator {
 			'users'                    => array(),
 			'affiliates'               => array(),
 			'products'                 => array(),
+			'campaigns'                => array(),
 			'date_range'               => array(
 				'earliest' => 'last month',
 				'latest'   => 'today',
@@ -103,6 +105,10 @@ class Order extends Integration_Generator {
 		// Construct affiliates args
 		if ( ! is_array( $args['affiliates'] ) ) {
 			$args['affiliates'] = array( $args['affiliates'] );
+		}
+
+		if ( ! is_array( $args['campaign'] ) ) {
+			$args['campaigns '] = array( $args['campaigns'] );
 		}
 
 		// Construct users args

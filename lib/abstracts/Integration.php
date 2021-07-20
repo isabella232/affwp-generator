@@ -98,8 +98,9 @@ abstract class Integration {
 	 *
 	 * @param int $affiliate The affiliate ID to simulate a visit for.
 	 */
-	public function simulate_visit( $affiliate ) {
-		add_filter( 'affwp_get_referring_affiliate_id', function() use ( $affiliate ) {
+	public function simulate_visit( $affiliate, $campaign = '' ) {
+		// Set affiliate
+		add_filter( 'affwp_get_referring_affiliate_id', function () use ( $affiliate ) {
 			return $affiliate;
 		} );
 
@@ -107,26 +108,28 @@ abstract class Integration {
 		$visit_id = affiliate_wp()->visits->add( array(
 				'context'      => $this->integration->context,
 				'affiliate_id' => $affiliate,
+				'campaign'     => $campaign
 			)
 		);
 
 		// Set the visit and affiliate cookies. This allows integrations to handle setting referrals.
-		$_COOKIE['affwp_ref_visit_id'] = $visit_id;
-		$_COOKIE['affwp_ref']          = $affiliate;
+		$_COOKIE[ affiliate_wp()->tracking->get_cookie_name( 'visit' ) ] = $visit_id;
+		$_COOKIE[ affiliate_wp()->tracking->get_cookie_name() ]                    = $affiliate;
 	}
 
 	/**
 	 * Places an order with a referral.
 	 *
-	 * @param int             $user      The user ID to use as the customer.
-	 * @param int             $affiliate The affiliate ID to use for the referral.
-	 * @param array           $products  List of product IDs to use in the order.
-	 * @param DateTime|false $date The date to set the order, and referral.
+	 * @param int            $user      The user ID to use as the customer.
+	 * @param int            $affiliate The affiliate ID to use for the referral.
+	 * @param array          $products  List of product IDs to use in the order.
+	 * @param string         $campaign  The campaign. Default empty.
+	 * @param DateTime|false $date      The date to set the order, and referral.
 	 *
 	 * @return int The order ID.
 	 */
-	public function place_referred_order( $user, $affiliate, $products, $date = false ) {
-		$this->simulate_visit( $affiliate );
+	public function place_referred_order( $user, $affiliate, $products, $campaign = '', $date = false ) {
+		$this->simulate_visit( $affiliate, $campaign );
 
 		$payment_id = $this->place_order( $user, $products, $date );
 

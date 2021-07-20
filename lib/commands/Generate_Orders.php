@@ -67,6 +67,11 @@ class Generate_Orders extends Command {
 	 * ---
 	 * default: today
 	 *
+	 * [--campaigns=<string>]
+	 * : A campaign slug, or of list of campaign slugs separated by a space.
+	 * ---
+	 * default:
+	 *
 	 * [--format=<string>]
 	 * : Return Format.
 	 * ---
@@ -91,6 +96,7 @@ class Generate_Orders extends Command {
 		$assoc_args['products']   = explode( ' ', $assoc_args['products'] );
 		$assoc_args['affiliates'] = explode( ' ', $assoc_args['affiliates'] );
 		$assoc_args['users']      = explode( ' ', $assoc_args['users'] );
+		$assoc_args['campaigns']  = explode( ' ', $assoc_args['campaigns'] );
 
 		$assoc_args['date_range'] = array(
 			'earliest' => $assoc_args['earliest-date'],
