@@ -111,6 +111,11 @@ class Order extends Integration_Generator {
 			$args['campaigns '] = array( $args['campaigns'] );
 		}
 
+		// Campaigns cannot be empty.
+		if ( empty( $args['campaigns'] ) ) {
+			$args['campaigns'][] = '';
+		}
+
 		// Construct users args
 		if ( ! is_array( $args['users'] ) ) {
 			$args['users'] = array( $args['users'] );
