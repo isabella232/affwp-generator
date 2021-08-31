@@ -6,8 +6,6 @@ Currently, this utility works with two integrations:
 * Easy Digital Downloads
 * WooCommerce
 
-I'd like to get this to support RCP _someday_.
-
 ## Minimum Requirements
 
 This plugin, at minimum, requires:
